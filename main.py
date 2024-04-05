@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.chatbot import router as chatbot_router
 from fastapi.middleware.cors import CORSMiddleware
+from api import chatbot  # Import the chatbot function directly
 
 app = FastAPI(
     title="Chatbot API",
@@ -23,22 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include the chatbot router
-app.include_router(chatbot_router)
+@app.get("/chatbot/")
+async def run_chatbot(user_input: str):
+    response = chatbot.chatbot(user_input)  # Call the chatbot function directly
+    return {"response": response}
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=8000)
-
-
-
-
-
-
-
-
-
-
-
-
-
